@@ -1,0 +1,182 @@
+{%extends 'base.html' %}
+{%block title %}HOMEZO{%endblock %}
+
+{%block extra_head %}
+<script>
+    function validateForm() {
+        let email = document.forms["regForm"]["Email"].value;
+        let phone = document.forms["regForm"]["phone"].value;
+        let password = document.forms["regForm"]["Password"].value;
+        let confirmPassword = document.forms["regForm"]["cPassword"].value;
+
+        document.getElementById("emailError").innerHTML = "";
+        document.getElementById("phoneError").innerHTML = "";
+        document.getElementById("passError").innerHTML = "";
+        document.getElementById("cpassError").innerHTML = "";
+
+        // Email validation
+        let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            document.getElementById("emailError").innerHTML = "Enter a valid email address";
+            return false;
+        }
+
+        // Phone validation (10 digits)
+        let phonePattern = /^[0-9]{10}$/;
+        if (!phonePattern.test(phone)) {
+            document.getElementById("phoneError").innerHTML = "Phone number must be 10 digits";
+            return false;
+        }
+
+        // Password validation (ONLY letters)
+        let passPattern = /^[A-Za-z]{6,}$/;
+        if (!passPattern.test(password)) {
+            document.getElementById("passError").innerHTML = "Password must contain only letters (A–Z, a–z) and minimum 6 characters";
+            return false;
+        }
+
+        // Confirm Password
+        if (password !== confirmPassword) {
+            document.getElementById("cpassError").innerHTML = "Password and Confirm Password must be the same";
+            return false;
+        }
+
+        return true;
+    }
+</script>
+<style>
+    .error {
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+</style>
+{%endblock %}
+
+{%block content %}
+<div class="container">
+    <div class="form-container" style="max-width: 600px;"> <!-- Slightly wider for seller form -->
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--text-color);">Become a Seller</h2>
+
+        <form name="regForm" method="POST" onsubmit="return validateForm();" enctype="multipart/form-data">
+            {%csrf_token %}
+
+            <div class="row" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="col" style="flex: 1; min-width: 250px;">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="text" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col" style="flex: 1; min-width: 250px;">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="Email" class="form-control" required>
+                        <div id="emailError" class="error"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="col" style="flex: 1; min-width: 250px;">
+                    <div class="form-group">
+                        <label class="form-label">Brand Name</label>
+                        <input type="text" name="Brand" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col" style="flex: 1; min-width: 250px;">
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" name="phone" class="form-control" required>
+                        <div id="phoneError" class="error"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="col" style="flex: 1; min-width: 250px;">
+                    <div class="form-group">
+                        <label class="form-label">Photo</label>
+                        <input type="file" name="photo" class="form-control" required style="padding: 9px;">
+                    </div>
+                </div>
+                <div class="col" style="flex: 1; min-width: 250px;">
+                    <div class="form-group">
+                        <label class="form-label">Age</label>
+                        <select name="age" class="form-control" required style="height: 46px;">
+                            <option>18-25</option>
+                            <option>25-35</option>
+                            <option>36-50</option>
+                            <option>50-100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Address</label>
+                <textarea name="address" class="form-control" required rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">City</label>
+                <input type="text" name="City" class="form-control" required>
+            </div>
+
+            <div class="row" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="col" style="flex: 1; min-width: 250px;">
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div style="position: relative;">
+                            <input type="password" name="Password" id="password" class="form-control" required>
+                            <i class="far fa-eye" id="togglePassword"
+                                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                        </div>
+                        <div id="passError" class="error"></div>
+                    </div>
+                </div>
+                <div class="col" style="flex: 1; min-width: 250px;">
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <div style="position: relative;">
+                            <input type="password" name="cPassword" id="confirmPassword" class="form-control" required>
+                            <i class="far fa-eye" id="toggleConfirmPassword"
+                                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                        </div>
+                        <div id="cpassError" class="error"></div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Toggle Password
+                const togglePassword = document.querySelector('#togglePassword');
+                const password = document.querySelector('#password');
+                togglePassword.addEventListener('click', function (e) {
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+
+                // Toggle Confirm Password
+                const toggleConfirmPassword = document.querySelector('#toggleConfirmPassword');
+                const confirmPassword = document.querySelector('#confirmPassword');
+                toggleConfirmPassword.addEventListener('click', function (e) {
+                    const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                    confirmPassword.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            </script>
+
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; border-radius: 4px; margin-top: 10px;">Register as Seller</button>
+            <div style="text-align: center; margin-top: 20px;">
+                <span style="font-size: 13px; color: #666;">Already have an account?</span>
+                <a href="/login/log/" style="font-size: 13px; color: var(--accent-color); font-weight: 600;">Sign In</a>
+            </div>
+        </form>
+    </div>
+</div>
+{%endblock %}

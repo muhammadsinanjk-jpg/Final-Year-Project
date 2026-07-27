@@ -1,0 +1,139 @@
+{%extends 'base.html' %}
+{%block title %}HOMEZO{%endblock %}
+
+{%block extra_head %}
+<!-- Keeping existing JS validation -->
+<script>
+    function validateForm() {
+        let email = document.getElementById("email").value;
+        let phone = document.getElementById("phone").value;
+        let password = document.getElementById("password").value;
+        let confirmPassword = document.getElementById("confirmPassword").value;
+
+        document.getElementById("emailError").innerHTML = "";
+        document.getElementById("phoneError").innerHTML = "";
+        document.getElementById("passError").innerHTML = "";
+        document.getElementById("cpassError").innerHTML = "";
+
+        // Email
+        let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            document.getElementById("emailError").innerHTML = "Enter a valid email address";
+            return false;
+        }
+
+        // Phone (10 digits)
+        let phonePattern = /^[0-9]{10}$/;
+        if (!phonePattern.test(phone)) {
+            document.getElementById("phoneError").innerHTML = "Phone number must be 10 digits";
+            return false;
+        }
+
+        // Password (ONLY letters)
+        let passPattern = /^[A-Za-z]{6,}$/;
+        if (!passPattern.test(password)) {
+            document.getElementById("passError").innerHTML = "Password must contain only letters (A–Z, a–z) and minimum 6 characters";
+            return false;
+        }
+
+        // Confirm Password
+        if (password !== confirmPassword) {
+            document.getElementById("cpassError").innerHTML = "Password and Confirm Password must be the same";
+            return false;
+        }
+
+        return true;
+    }
+</script>
+<style>
+    .error {
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+</style>
+{%endblock %}
+
+{%block content %}
+<div class="container">
+    <div class="form-container">
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--text-color);">Create Buyer Account</h2>
+
+        <form method="post" onsubmit="return validateForm();" enctype="multipart/form-data">
+            {%csrf_token %}
+
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" name="Name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="Email" id="email" class="form-control" required>
+                <div id="emailError" class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="tel" name="Phone" id="phone" class="form-control" required>
+                <div id="phoneError" class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Photo</label>
+                <input type="file" name="photo" class="form-control" required style="padding: 9px;">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div style="position: relative;">
+                    <input type="password" name="Password" id="password" class="form-control" required>
+                    <i class="far fa-eye" id="togglePassword"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                </div>
+                <div id="passError" class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="confirmPassword" class="form-control" required>
+                    <i class="far fa-eye" id="toggleConfirmPassword"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                </div>
+                <div id="cpassError" class="error"></div>
+            </div>
+
+            <script>
+                // Toggle Password
+                const togglePassword = document.querySelector('#togglePassword');
+                const password = document.querySelector('#password');
+                togglePassword.addEventListener('click', function (e) {
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+
+                // Toggle Confirm Password
+                const toggleConfirmPassword = document.querySelector('#toggleConfirmPassword');
+                const confirmPassword = document.querySelector('#confirmPassword');
+                toggleConfirmPassword.addEventListener('click', function (e) {
+                    const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                    confirmPassword.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            </script>
+
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; border-radius: 4px; margin-top: 10px;">Register</button>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <span style="font-size: 13px; color: #666;">Already have an account?</span>
+                <a href="/login/log/" style="font-size: 13px; color: var(--accent-color); font-weight: 600;">Sign In</a>
+            </div>
+        </form>
+    </div>
+</div>
+{%endblock %}

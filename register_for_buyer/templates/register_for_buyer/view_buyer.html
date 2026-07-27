@@ -1,0 +1,217 @@
+{%extends 'base.html' %}
+{%load static %}
+{%block title %}My Profile | HOMEZO{%endblock %}
+{%block nav_items %}
+<a href="/temp/buyer/" class="nav-link">Home</a>
+<a href="/add_product/v_product/" class="nav-link">Product</a>
+<a href="/status/vds/" class="nav-link">Order Status</a>
+<a href="/payment/v_feed/" class="nav-link">Order History</a>
+<a href="/compalint_and_replay/add/" class="nav-link">Complaint</a>
+{%endblock %}
+{%block header_right %}
+<a href="/cart/v_cart/" class="header-icon" title="Cart"><i class="fas fa-shopping-cart"></i></a>
+<a href="/register_for_buyer/vu/" class="header-icon active" title="Profile"><i class="fas fa-user-circle"></i></a>
+<a href="/compalint_and_replay/viewreply/" class="header-icon" title="Reply"><i class="fas fa-comment-dots"></i></a>
+{%endblock %}
+{%block content %}
+<style>
+    .header-icon {
+        color: #2c3e50;
+        font-size: 20px;
+        transition: color 0.3s;
+        margin-left: 15px;
+        text-decoration: none;
+    }
+
+    .header-icon:hover,
+    .header-icon.active {
+        color: var(--primary-color);
+    }
+
+    .profile-page-wrapper {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+        min-height: 80vh;
+    }
+
+    .profile-hero {
+        background: linear-gradient(135deg, #004d40 0%, #002f34 100%);
+        height: 180px;
+        border-radius: 20px 20px 0 0;
+        position: relative;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-card-main {
+        background: white;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        padding: 0 40px 40px;
+        text-align: center;
+    }
+
+    .buyer-avatar-wrap {
+        position: absolute;
+        bottom: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: white;
+        padding: 6px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        z-index: 5;
+    }
+
+    .buyer-avatar-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center top;
+        border: 2px solid #f8fafc;
+    }
+
+    .buyer-name-header {
+        font-size: 32px;
+        font-weight: 900;
+        color: #1e293b;
+        margin-top: 80px;
+        margin-bottom: 5px;
+        letter-spacing: -0.5px;
+    }
+
+    .buyer-email-sub {
+        font-size: 16px;
+        color: #64748b;
+        margin-bottom: 30px;
+    }
+
+    .personal-info-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        text-align: left;
+        background: #f8fafc;
+        padding: 25px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 35px;
+    }
+
+    .personal-info-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 16px;
+        color: #334155;
+    }
+
+    .personal-info-item i {
+        font-size: 18px;
+        color: #004d40;
+        width: 24px;
+    }
+
+    .personal-info-item b {
+        color: #1e293b;
+        font-weight: 600;
+        min-width: 80px;
+    }
+
+    .edit-profile-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #004d40;
+        color: white;
+        padding: 14px 30px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 18px rgba(0, 77, 64, 0.2);
+    }
+
+    .edit-profile-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 77, 64, 0.3);
+        background: #002f34;
+    }
+
+    .profile-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-top: 50px;
+    }
+
+    .footer-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: background 0.2s;
+    }
+
+    .back-btn {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .back-btn:hover {
+        background: #e2e8f0;
+    }
+
+    .logout-btn-new {
+        background: #fee2e2;
+        color: #ef4444;
+    }
+
+    .logout-btn-new:hover {
+        background: #fecaca;
+    }
+</style>
+<div class="profile-page-wrapper">
+    {%for i in a %}
+    <div class="profile-hero">
+        <div class="buyer-avatar-wrap">
+            <img src="/static/{{i.photo}}" alt="{{i.name}}" class="buyer-avatar-img">
+        </div>
+    </div>
+    <div class="profile-card-main">
+        <h1 class="buyer-name-header">{{i.name}}</h1>
+        <p class="buyer-email-sub">{{i.email}}</p>
+
+        <div class="personal-info-grid">
+            <div class="personal-info-item">
+                <i class="fas fa-phone-alt"></i>
+                <b>Phone</b> {{i.phone}}
+            </div>
+        </div>
+
+        <a href="/register_for_buyer/up/{{i.reg_id}}" class="edit-profile-btn">
+            <i class="fas fa-user-edit"></i> Edit Profile Details
+        </a>
+    </div>
+    {%empty %}
+    <div class="profile-card-main" style="padding: 100px 40px; border-radius: 20px;">
+        <i class="fas fa-user-circle" style="font-size: 70px; color: #e2e8f0; margin-bottom: 20px;"></i>
+        <h2 style="color: #64748b;">No Profile Information Available</h2>
+    </div>
+    {%endfor %}
+
+    <div class="profile-footer">
+        <a href="/temp/buyer/" class="footer-btn back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        <a href="{%url 'logout' %}" class="footer-btn logout-btn-new"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+</div>
+{%endblock %}

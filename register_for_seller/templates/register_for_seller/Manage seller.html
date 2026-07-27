@@ -1,0 +1,293 @@
+{%extends 'base.html' %}
+{%load static %}
+{%block title %}Manage Sellers | HOMEZO Admin{%endblock %}
+{%block nav_items %}
+<a href="/temp/admin/" class="nav-link">Home</a>
+<a href="/catagory/catagory/" class="nav-link">Add Category</a>
+<a href="/register_for_seller/manage_s/" class="nav-link">Manage Seller</a>
+<a href="/compalint_and_replay/viecompl/" class="nav-link">Complaint</a>
+<a href="/catagory/vc/" class="nav-link">View Category</a>
+{%endblock %}
+
+{%block content %}
+<style>
+    .admin-manage-wrapper {
+        max-width: 1300px;
+        margin: 40px auto;
+        padding: 0 20px;
+        min-height: 80vh;
+    }
+
+    .manage-header {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .manage-header h1 {
+        font-size: 32px;
+        font-weight: 900;
+        color: #1e293b;
+        letter-spacing: -0.5px;
+    }
+
+    .manage-header p {
+        color: #64748b;
+        margin-top: 5px;
+    }
+
+    .table-responsive {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        overflow-x: auto;
+        border: 1px solid #f1f5f9;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1100px;
+    }
+
+    th {
+        background: #f8fafc;
+        padding: 18px 20px;
+        text-align: left;
+        font-size: 12px;
+        font-weight: 800;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid #f1f5f9;
+        white-space: nowrap;
+    }
+
+    td {
+        padding: 16px 20px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-size: 14px;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:hover td {
+        background: #fcfdfe;
+    }
+
+    .seller-profile-cell {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .seller-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 10px;
+        object-fit: cover;
+        border: 2px solid #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .seller-info-main b {
+        display: block;
+        color: #1e293b;
+        font-size: 15px;
+    }
+
+    .seller-info-main span {
+        font-size: 12px;
+        color: #94a3b8;
+    }
+
+    .status-pill {
+        display: inline-flex;
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-accepted {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status-rejected {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .status-pending {
+        background: #fef9c3;
+        color: #a16207;
+    }
+
+    .action-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn-action-sm {
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-accept-sm {
+        background: #004d40;
+        color: white;
+    }
+
+    .btn-accept-sm:hover {
+        background: #002f34;
+        transform: translateY(-1px);
+    }
+
+    .btn-reject-sm {
+        background: #f1f5f9;
+        color: #ef4444;
+        border: 1px solid #fee2e2;
+    }
+
+    .btn-reject-sm:hover {
+        background: #fee2e2;
+        transform: translateY(-1px);
+    }
+
+    .contact-cell i {
+        width: 18px;
+        color: #004d40;
+        margin-right: 5px;
+    }
+
+    .footer-nav {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+    }
+
+    .back-home-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+        transition: color 0.2s;
+    }
+
+    .back-home-btn:hover {
+        color: #1e293b;
+    }
+</style>
+
+<div class="admin-manage-wrapper">
+    <div class="manage-header">
+        <h1>Manage Sellers</h1>
+        <p>Review and approve merchant applications</p>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Seller Details</th>
+                    <th>Business</th>
+                    <th>Contact Info</th>
+                    <th>Location</th>
+                    <th>Password</th>
+                    <th>Status</th>
+                    <th style="text-align: center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in a %}
+                <tr>
+                    <td>
+                        <div class="seller-profile-cell">
+                            <img src="/static/{{i.photo}}" class="seller-avatar" alt="{{i.name}}">
+                            <div class="seller-info-main">
+                                <b>{{i.name}}</b>
+                                <span>Age: {{i.age}}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 600; color: #1e293b;">{{i.brand_name}}</div>
+                        <span style="font-size: 12px; color: #94a3b8;">Brand Name</span>
+                    </td>
+                    <td class="contact-cell">
+                        <div><i class="fas fa-envelope"></i>{{i.email}}</div>
+                        <div style="margin-top: 4px;"><i class="fas fa-phone"></i>{{i.phone}}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 500;">{{i.city}}</div>
+                        <div style="font-size: 12px; color: #64748b; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                            title="{{i.address}}">
+                            {{i.address}}
+                        </div>
+                    </td>
+                    <td>
+                        <code
+                            style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 12px; color: #475569;">{{i.password}}</code>
+                    </td>
+                    <td>
+                        <span
+                            class="status-pill {%if i.status == 'accepted' %}status-accepted{%elif i.status == 'rejected' %}status-rejected{%else %}status-pending{%endif %}">
+                            {{i.status|default:"Pending"}}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-group">
+                            <a href="/register_for_seller/accept/{{i.sreg_id}}/" class="btn-action-sm btn-accept-sm">
+                                <i class="fas fa-check"></i> Accept
+                            </a>
+                            <a href="/register_for_seller/reject/{{i.sreg_id}}/" class="btn-action-sm btn-reject-sm">
+                                <i class="fas fa-times"></i> Reject
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {%empty %}
+                <tr>
+                    <td colspan="7">
+                        <div style="padding: 100px 40px; text-align: center;">
+                            <i class="fas fa-users-slash"
+                                style="font-size: 60px; color: #e2e8f0; margin-bottom: 20px; display: block;"></i>
+                            <h2 style="color: #64748b;">No Seller Applications</h2>
+                            <p style="color: #94a3b8; margin-top: 10px;">Wait for new merchants to register on the
+                                platform.</p>
+                        </div>
+                    </td>
+                </tr>
+                {%endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer-nav">
+        <a href="/temp/admin/" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i> Back to Admin Home
+        </a>
+    </div>
+</div>
+{%endblock %}
