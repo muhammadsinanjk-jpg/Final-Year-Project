@@ -1,0 +1,158 @@
+{%extends 'base.html' %}
+{%load static %}
+{%block title %}Add Category | HOMEZO Admin{%endblock %}
+{%block nav_items %}
+<a href="/temp/admin/" class="nav-link">Home</a>
+<a href="/catagory/catagory/" class="nav-link">Add Category</a>
+<a href="/register_for_seller/manage_s/" class="nav-link">Manage Seller</a>
+<a href="/compalint_and_replay/viecompl/" class="nav-link">Complaint</a>
+<a href="/catagory/vc/" class="nav-link">View Category</a>
+{%endblock %}
+
+{%block content %}
+<style>
+    .admin-form-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background: #f8fafc;
+    }
+
+    .form-card {
+        background: white;
+        width: 100%;
+        max-width: 500px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+        padding: 40px;
+        animation: scaleIn 0.5s ease;
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .form-header i {
+        font-size: 40px;
+        color: #004d40;
+        margin-bottom: 15px;
+    }
+
+    .form-header h1 {
+        font-size: 28px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 10px;
+    }
+
+    .form-header p {
+        color: #64748b;
+        font-size: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: all 0.3s;
+        color: #1e293b;
+    }
+
+    .form-control:focus {
+        border-color: #004d40;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(0, 77, 64, 0.1);
+    }
+
+    .btn-submit-large {
+        width: 100%;
+        padding: 14px;
+        background: #004d40;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 6px 20px rgba(0, 77, 64, 0.2);
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-submit-large:hover {
+        background: #002f34;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 77, 64, 0.3);
+    }
+
+    .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 25px;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+
+    .back-link:hover {
+        color: #004d40;
+    }
+</style>
+
+<div class="admin-form-wrapper">
+    <div class="form-card">
+        <div class="form-header">
+            <i class="fas fa-grid-2-plus"></i>
+            <h1>Create Category</h1>
+            <p>Add a new category to the marketplace</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {%csrf_token %}
+            <div class="form-group">
+                <label>Category Name</label>
+                <input type="text" name="catagory" class="form-control" placeholder="e.g. Electronics, Fashion"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label>Category Image</label>
+                <input type="file" name="image" class="form-control" style="padding: 8px;" required>
+                <small style="color: #94a3b8; font-size: 12px; margin-top: 6px; display: block;">Upload a high-quality
+                    square image</small>
+            </div>
+
+            <button type="submit" class="btn-submit-large">
+                <i class="fas fa-plus-circle"></i> Add Category
+            </button>
+        </form>
+
+        <a href="/temp/admin/" class="back-link">
+            <i class="fas fa-arrow-left" style="margin-right: 5px;"></i> Back to Admin Home
+        </a>
+    </div>
+</div>
+{%endblock %}
