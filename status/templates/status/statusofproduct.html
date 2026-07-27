@@ -1,0 +1,254 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}Track Orders | Homezo{%endblock %}
+
+{%block nav_items %}
+<a href="/temp/buyer/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Home</a>
+<a href="/add_product/v_product/"
+    style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Product</a>
+<a href="/status/vds/"
+    style="font-weight: 500; font-size: 16px; color: #004d40; border-bottom: 2px solid #004d40; text-decoration: none;">Order
+    Status</a>
+<a href="/payment/v_feed/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Order
+    History</a>
+<a href="/compalint_and_replay/add/"
+    style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Complaint</a>
+{%endblock %}
+
+{%block header_right %}
+<!-- Right Side Icons -->
+<div style="display: flex; align-items: center; gap: 20px;">
+    <a href="/cart/v_cart/" style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;"
+        title="Cart">
+        <i class="fas fa-shopping-cart"></i>
+    </a>
+    <a href="/register_for_buyer/vu/"
+        style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;" title="Update Profile">
+        <i class="fas fa-user-circle"></i>
+    </a>
+    <a href="/compalint_and_replay/viewreply/"
+        style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;" title="Messages">
+        <i class="fas fa-comment-dots"></i>
+    </a>
+</div>
+{%endblock %}
+
+{%block content %}
+<style>
+    .tracking-page-wrapper {
+        min-height: 80vh;
+        padding: 60px 20px;
+        background: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tracking-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .tracking-header h1 {
+        font-size: 36px;
+        font-weight: 800;
+        color: #004d40;
+        margin-bottom: 10px;
+    }
+
+    .tracking-header p {
+        color: #64748b;
+        font-size: 16px;
+    }
+
+    .status-list {
+        width: 100%;
+        max-width: 900px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .status-item-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+        border: 1px solid #f1f5f9;
+        display: flex;
+        gap: 25px;
+        align-items: center;
+        transition: transform 0.2s;
+    }
+
+    .status-item-card:hover {
+        transform: scale(1.01);
+    }
+
+    .prod-img-box {
+        width: 100px;
+        height: 100px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #f1f5f9;
+        flex-shrink: 0;
+    }
+
+    .prod-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .prod-details {
+        flex-grow: 1;
+    }
+
+    .order-num {
+        font-size: 13px;
+        font-weight: 700;
+        color: #94a3b8;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .prod-name {
+        font-size: 20px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+
+    .prod-meta {
+        font-size: 14px;
+        color: #64748b;
+        font-weight: 600;
+        display: flex;
+        gap: 20px;
+    }
+
+    .status-badge {
+        font-size: 14px;
+        font-weight: 800;
+        padding: 10px 18px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 140px;
+        justify-content: center;
+    }
+
+    .st-pending {
+        background: #fffbeb;
+        color: #b45309;
+    }
+
+    .st-shipped {
+        background: #eff6ff;
+        color: #1d4ed8;
+    }
+
+    .st-delivered {
+        background: #f0fdf4;
+        color: #15803d;
+    }
+
+    .st-cancelled {
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    .st-default {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .empty-status {
+        text-align: center;
+        padding: 80px 40px;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        max-width: 600px;
+    }
+
+    .btn-return {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        margin-top: 50px;
+        transition: color 0.2s;
+    }
+
+    .btn-return:hover {
+        color: #004d40;
+    }
+</style>
+
+<div class="tracking-page-wrapper">
+    <div class="tracking-header">
+        <h1>Track Your Orders</h1>
+        <p>Stay updated on your live deliveries and shopping journey.</p>
+    </div>
+
+    <div class="status-list">
+        {%for i in ss %}
+        <div class="status-item-card">
+            <div class="prod-img-box">
+                {%if i.order.pro.image_of_product %}
+                <img src="/static/{{i.order.pro.image_of_product}}" alt="{{i.order.pro.product_name}}">
+                {%else %}
+                <div
+                    style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: #94a3b8;">
+                    <i class="fas fa-box-open fa-2x"></i>
+                </div>
+                {%endif %}
+            </div>
+
+            <div class="prod-details">
+                <span class="order-num">ORDER #{{i.order.order_id}}</span>
+                <h3 class="prod-name">{{i.order.pro.product_name}}</h3>
+                <div class="prod-meta">
+                    <span><i class="fas fa-tag"></i> {{i.order.pro.cat.catagory}}</span>
+                    <span><i class="fas fa-wallet"></i> ₹{{i.order.amount}}</span>
+                </div>
+            </div>
+
+            {%if i.delivery_status|lower == 'pending' or i.delivery_status|lower == 'queue' %}
+            <div class="status-badge st-pending"><i class="fas fa-hourglass-half"></i> In Queue</div>
+            {%elif i.delivery_status|lower == 'packing' %}
+            <div class="status-badge st-shipped"><i class="fas fa-box"></i> Packing...</div>
+            {%elif i.delivery_status|lower == 'shipping' or i.delivery_status|lower == 'shipped' %}
+            <div class="status-badge st-shipped"><i class="fas fa-truck"></i> Shipped</div>
+            {%elif i.delivery_status|lower == 'out_for_delivery' %}
+            <div class="status-badge st-delivered"><i class="fas fa-motorcycle"></i> Out for Delivery</div>
+            {%elif i.delivery_status|lower == 'completed' or i.delivery_status|lower == 'delivered' %}
+            <div class="status-badge st-delivered"><i class="fas fa-check-circle"></i> Delivered</div>
+            {%else %}
+            <div class="status-badge st-default">{{i.delivery_status}}</div>
+            {%endif %}
+        </div>
+        {%empty %}
+        <div class="empty-status">
+            <i class="fas fa-box-open" style="font-size: 64px; color: #e2e8f0; margin-bottom: 25px;"></i>
+            <h2 style="color: #1e293b; margin-bottom: 10px;">No Active Orders</h2>
+            <p style="color: #64748b; margin-bottom: 30px;">Looks like you haven't placed any orders yet. Start
+                exploring our fresh arrivals!</p>
+            <a href="/add_product/v_product/" class="btn"
+                style="background: #004d40; color: white; padding: 14px 28px; border-radius: 12px; font-weight: 700; text-decoration: none;">Start
+                Shopping</a>
+        </div>
+        {%endfor %}
+    </div>
+
+    <a href="/temp/buyer/" class="btn-return">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+{%endblock %}
