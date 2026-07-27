@@ -1,0 +1,129 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}HOMEZO{%endblock %}
+
+{%block content %}
+<!-- Hero Section -->
+<section class="hero-section" style="margin-bottom: 40px;">
+    <div class="container">
+        <!-- Using a static banner for now as per design -->
+        <div class="hero-banner"
+            style="position: relative; border-radius: 24px; overflow: hidden; height: 500px; display: flex; align-items: center; background: #004d40; color: white;">
+            <!-- Background Image with Overlay -->
+            <div
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,77,64,0.9) 0%, rgba(0,77,64,0.4) 50%, rgba(0,77,64,0.1) 100%), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80') center/cover;">
+            </div>
+
+            <div class="hero-content animate-stagger"
+                style="position: relative; z-index: 2; padding: 60px; max-width: 650px;">
+                <h2
+                    style="font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: #80cbc4; margin-bottom: 15px;">
+                    Fresh & Organic</h2>
+                <h1
+                    style="font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; text-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    Exquisite Food <br>At Your Door
+                </h1>
+                <p style="font-size: 18px; line-height: 1.6; margin-bottom: 35px; opacity: 0.95; color: #e0f2f1;">
+                    Discover the finest local produce and gourmet meals from hand-picked sellers in your community.
+                </p>
+                <div style="display: flex; gap: 15px;">
+                    <a href="/login/log/" class="btn"
+                        style="background: white; color: #004d40; padding: 16px 35px; border-radius: 12px; font-weight: 700; font-size: 16px; text-decoration: none; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        Explore Shop
+                    </a>
+                    <a href="/register_for_seller/add/" class="btn"
+                        style="background: rgba(255,255,255,0.15); color: white; padding: 16px 35px; border-radius: 12px; font-weight: 700; font-size: 16px; text-decoration: none; border: 1.5px solid rgba(255,255,255,0.4); backdrop-filter: blur(10px); transition: all 0.3s;">
+                        Start Selling
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories -->
+<section class="home-categories container" style="margin-bottom: 60px;">
+    <div class="section-title">
+        <span>Explore Popular Categories</span>
+    </div>
+
+    <div class="category-circle-grid">
+        {% for cat in categories %}
+        <a href="{% url 'public_shop' %}?category={{ cat.catagory }}" class="cat-circle-item">
+            <div class="cat-circle-img">
+                {% if cat.image %}
+                <img src="/static/{{ cat.image }}" alt="{{ cat.catagory }}"
+                    onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400'">
+                {% else %}
+                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400"
+                    alt="{{ cat.catagory }}">
+                {% endif %}
+            </div>
+            <span class="cat-circle-name">{{ cat.catagory }}</span>
+        </a>
+        {% empty %}
+        <p>No categories found.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Trending Products -->
+<section class="featured-products container" style="margin-bottom: 80px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+        <div class="section-title" style="margin-bottom: 0;">
+            <span>Trending This Week</span>
+        </div>
+        <a href="/add_product/shop/" class="btn-view-more"
+            style="color: #004d40; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.3s; padding: 8px 16px; border-radius: 8px; border: 1.5px solid #004d40;">
+            View More <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
+    <div class="product-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
+        {%for i in products|slice:":4" %}
+        <div class="p-card"
+            style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: all 0.3s; border: 1px solid #f1f5f9; display: flex; flex-direction: column;">
+            <div class="p-img-box" style="height: 180px; overflow: hidden; position: relative;">
+                {%if i.image_of_product %}
+                <img src="/static/{{i.image_of_product}}" alt="{{i.product_name}}"
+                    style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;">
+                {%else %}
+                <img src="https://via.placeholder.com/400x300?text=No+Image" alt="No Image"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+                {%endif %}
+            </div>
+            <div class="p-content" style="padding: 18px;">
+                <div class="p-cat"
+                    style="font-size: 11px; font-weight: 800; color: #004d40; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
+                    {{i.cat.catagory}}</div>
+                <h3 class="p-name" style="font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 8px;">
+                    {{i.product_name}}</h3>
+            </div>
+        </div>
+        {%endfor %}
+    </div>
+</section>
+
+<style>
+    .btn-view-more:hover {
+        background: #004d40;
+        color: white !important;
+        transform: translateX(5px);
+    }
+
+    .p-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .p-card:hover img {
+        transform: scale(1.1);
+    }
+</style>
+
+
+
+
+{%endblock %}

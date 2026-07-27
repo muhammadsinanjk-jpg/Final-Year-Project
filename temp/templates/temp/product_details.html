@@ -1,0 +1,106 @@
+{%extends 'base.html' %}
+{%block title %}HOMEZO{%endblock %}
+
+{%block content %}
+<div class="container" style="margin-top: 40px; margin-bottom: 60px;">
+    <!-- Breadcrumb -->
+    <div style="font-size: 13px; color: #878787; margin-bottom: 20px;">
+        <a href="/">Home</a> <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i>
+        <a href="{%url 'products_by_category' product.cat.catagory %}">{{product.cat.catagory}}</a> <i
+            class="fas fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i>
+        <span>{{product.product_name}}</span>
+    </div>
+
+    <!-- Product Details Layout -->
+    <div style="display: flex; gap: 40px; background: white; padding: 20px; border-radius: 4px; flex-wrap: wrap;">
+        <!-- Left: Image -->
+        <div
+            style="flex: 1; min-width: 300px; display: flex; justify-content: center; align-items: center; border: 1px solid #f0f0f0; border-radius: 4px; padding: 20px;">
+            {%if product.image_of_product %}
+            <img src="/static/{{product.image_of_product}}" alt="{{product.product_name}}"
+                style="max-width: 100%; max-height: 400px; object-fit: contain;">
+            {%else %}
+            <img src="https://via.placeholder.com/400" alt="No Image" style="max-width: 100%;">
+            {%endif %}
+        </div>
+
+        <!-- Right: Info -->
+        <div style="flex: 1.5; min-width: 300px;">
+            <h1 style="font-size: 24px; margin-bottom: 10px; color: var(--text-color);">{{product.product_name}}</h1>
+
+            <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                <div class="pc-rating" style="font-size: 14px;">
+                    <span
+                        style="background: var(--primary-color); color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; font-weight: bold;">4.5
+                        <i class="fas fa-star" style="font-size: 10px;"></i></span>
+                </div>
+                <span style="color: #878787; font-size: 14px;">1,234 Ratings & 100 Reviews</span>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <span style="font-size: 28px; font-weight: 500; color: #212121;">₹{{product.product_price}}</span>
+                <span style="color: #878787; font-size: 14px; margin-left: 10px;">Free delivery</span>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <h4 style="font-size: 14px; color: #878787; margin-bottom: 10px;">Description:</h4>
+                <p style="font-size: 14px; line-height: 1.6; color: #212121;">{{product.description}}</p>
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+                <a href="#" class="btn add-to-cart" data-pro-id="{{product.pro_id}}"
+                    style="background: #004d40; color: white; flex: 1; padding: 16px; font-size: 16px; font-weight: 700; text-transform: uppercase; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,77,64,0.15); text-align: center; text-decoration: none; transition: all 0.2s;">
+                    <i class="fas fa-shopping-cart" style="margin-right: 8px;"></i> Add to Cart
+                </a>
+                <a href="{%url 'buy_now' product.pro_id %}" class="btn"
+                    style="background: #fb641b; color: white; flex: 1; padding: 16px; font-size: 16px; font-weight: 700; text-transform: uppercase; border-radius: 12px; box-shadow: 0 4px 12px rgba(251,100,27,0.15); text-align: center; text-decoration: none; transition: all 0.2s;">
+                    <i class="fas fa-bolt" style="margin-right: 8px;"></i> Buy Now
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const button = document.querySelector('.add-to-cart');
+        if (button) {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                const proId = this.dataset.proId;
+
+                fetch('/add_product/ajax_add_to_cart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{csrf_token}}'
+                    },
+                    body: JSON.stringify({ product_id: proId })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const originalText = button.innerHTML;
+                            button.innerHTML = '<i class="fas fa-check"></i> Added To Cart';
+                            button.style.background = '#059669';
+
+                            setTimeout(() => {
+                                button.innerHTML = originalText;
+                                button.style.background = '#004d40';
+                            }, 2000);
+                        } else if (data.error) {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Something went wrong!');
+                    });
+            });
+        }
+    });
+</script>
+{%endblock %}
+{%endblock %}

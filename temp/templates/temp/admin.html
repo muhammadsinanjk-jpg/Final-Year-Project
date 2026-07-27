@@ -1,0 +1,140 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}HOMEZO | Admin Home{%endblock %}
+
+{%block nav_items %}
+<a href="/temp/admin/" class="nav-link">Home</a>
+<a href="/catagory/catagory/" class="nav-link">Add Category</a>
+<a href="/register_for_seller/manage_s/" class="nav-link">Manage Seller</a>
+<a href="/compalint_and_replay/viecompl/" class="nav-link">Complaint</a>
+<a href="/catagory/vc/" class="nav-link">View Category</a>
+{%endblock %}
+
+{%block content %}
+<!-- Hero Section -->
+<section class="hero-section" style="margin-bottom: 40px;">
+    <div class="container">
+        <div class="hero-banner"
+            style="position: relative; border-radius: 24px; overflow: hidden; height: 380px; display: flex; align-items: center; background: #004d40; color: white;">
+            <!-- Background Image with Overlay -->
+            <div
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,77,64,0.9) 0%, rgba(0,77,64,0.5) 60%, rgba(0,77,64,0.2) 100%), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80') center/cover;">
+            </div>
+
+            <div class="hero-content animate-stagger"
+                style="position: relative; z-index: 2; padding: 60px; max-width: 650px;">
+                <h2
+                    style="font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: #80cbc4; margin-bottom: 15px;">
+                    Admin Control Center</h2>
+                <h1
+                    style="font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; text-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    Platform Management
+                </h1>
+                <p style="font-size: 17px; line-height: 1.6; margin-bottom: 25px; opacity: 0.95; color: #e0f2f1;">
+                    Approve seller accounts, oversee product categories, and manage customer support requests.
+                </p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <a href="/register_for_seller/manage_s/" class="btn"
+                        style="background: #ffb74d; color: #1e293b; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-user-check"></i> Seller Approvals
+                        {% if pending_sellers_count > 0 %}
+                        <span style="background: #e53935; color: white; border-radius: 20px; padding: 2px 8px; font-size: 12px;">{{ pending_sellers_count }} Pending</span>
+                        {% endif %}
+                    </a>
+                    <a href="/catagory/catagory/" class="btn"
+                        style="background: white; color: #004d40; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-plus"></i> Add Category
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Admin Management Grid -->
+<section class="container" style="margin-bottom: 50px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+        
+        <!-- Seller Approval Card -->
+        <a href="/register_for_seller/manage_s/" style="text-decoration: none; color: inherit;">
+            <div style="background: white; border-radius: 20px; padding: 28px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px rgba(0,0,0,0.03); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; border-radius: 14px; background: #e0f2f1; color: #004d40; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    {% if pending_sellers_count > 0 %}
+                    <span style="background: #fef3c7; color: #92400e; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 12px;">
+                        {{ pending_sellers_count }} Pending Review
+                    </span>
+                    {% else %}
+                    <span style="background: #dcfce7; color: #166534; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 12px;">
+                        All Up to Date
+                    </span>
+                    {% endif %}
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 6px;">Manage Sellers</h3>
+                <p style="color: #64748b; font-size: 14px; margin: 0;">Review seller registrations and approve or reject merchant accounts.</p>
+            </div>
+        </a>
+
+        <!-- Manage Categories Card -->
+        <a href="/catagory/vc/" style="text-decoration: none; color: inherit;">
+            <div style="background: white; border-radius: 20px; padding: 28px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px rgba(0,0,0,0.03); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; border-radius: 14px; background: #e0e7ff; color: #3730a3; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <span style="background: #e0e7ff; color: #3730a3; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 12px;">
+                        {{ categories|length }} Categories
+                    </span>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 6px;">Product Categories</h3>
+                <p style="color: #64748b; font-size: 14px; margin: 0;">Create, edit, and organize product categories across the marketplace.</p>
+            </div>
+        </a>
+
+        <!-- Customer Complaints Card -->
+        <a href="/compalint_and_replay/viecompl/" style="text-decoration: none; color: inherit;">
+            <div style="background: white; border-radius: 20px; padding: 28px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px rgba(0,0,0,0.03); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; border-radius: 14px; background: #fee2e2; color: #991b1b; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 6px;">Customer Complaints</h3>
+                <p style="color: #64748b; font-size: 14px; margin: 0;">View customer feedback, complaints, and send official admin replies.</p>
+            </div>
+        </a>
+
+    </div>
+</section>
+
+<!-- Categories Overview Grid -->
+<section class="home-categories container" style="margin-bottom: 60px;">
+    <div class="section-title">
+        <span>Active Categories Overview</span>
+    </div>
+
+    <div class="category-circle-grid animate-stagger">
+        {% for i in categories %}
+        <div class="cat-circle-item">
+            <div class="cat-circle-img">
+                {% if i.image %}
+                <img src="/static/{{i.image}}" alt="{{ i.catagory }}">
+                {% else %}
+                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400"
+                    alt="{{ i.catagory }}">
+                {% endif %}
+            </div>
+            <span class="cat-circle-name">{{ i.catagory }}</span>
+        </div>
+        {% empty %}
+        <div class="empty-state" style="grid-column: 1/-1;">
+            <p>No categories found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{%endblock %}

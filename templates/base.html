@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%block title %}HOMEZO{%endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    {%block extra_head %}{%endblock %}
+</head>
+
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container top-bar-content"
+            style="display: flex; align-items: center; justify-content: space-between; height: 60px;">
+            <!-- Logo (Left) -->
+            <div class="logo" style="flex: 0 0 auto; width: 140px;">
+                <a href="/">HOMEZO</a>
+            </div>
+
+            <!-- Center Navigation (Flex Center) -->
+            <div
+                style="flex: 1; display: flex; justify-content: center; gap: 20px; align-items: center; white-space: nowrap;">
+                {%block nav_items %}
+                <a href="/" class="nav-link">Home</a>
+                {%if user.is_authenticated %}
+                <div class="action-item user-menu-container">
+                    <a href="#" class="user-link nav-link">
+                        {{user.username}}
+                    </a>
+                    <!-- Dropdown -->
+                    <div class="user-dropdown">
+                        <a href="/status/vds/">Order Status</a>
+                        <a href="/payment/v_feed/">Order History</a>
+                        <a href="/compalint_and_replay/add/">Complaint</a>
+                        <a href="/logout/">Sign Out</a>
+                    </div>
+                </div>
+                {%else %}
+                <a href="/login/log/" class="nav-link">Sign In</a>
+                {%endif %}
+                {%endblock %}
+            </div>
+            <!-- Right Side Actions -->
+            <div class="header-right"
+                style="flex: 0 0 auto; width: 140px; display: flex; justify-content: flex-end; align-items: center; gap: 20px;">
+                {%block header_right %}
+                <!-- Default Right Side Content (can be overridden) -->
+                {%endblock %}
+            </div>
+        </div>
+    </div>
+    <!-- Removed Main Navigation Bar -->
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {%block content %}
+        {%endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>About Homezo</h3>
+                    <p>Your one-stop shop for everything you need. Quality products, best prices, and fast delivery.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Categories</h3>
+                    {% for cat in categories|slice:":4" %}
+                    <a href="/temp/catagory/{{ cat.catagory }}/">{{ cat.catagory }}</a>
+                    {% endfor %}
+                </div>
+                <div class="footer-col">
+                    <h3>Customer Service</h3>
+                    <a href="#">Help Center</a>
+                    <a href="#">Returns</a>
+                    <a href="#">Shipping Info</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h3>Stay Connected</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Homezo Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    {%block extra_scripts %}{%endblock %}
+</body>
+
+</html>
