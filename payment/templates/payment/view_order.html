@@ -1,0 +1,102 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}Manage Orders | HOMEZO{%endblock %}
+
+{%block nav_items %}
+<a href="/temp/seller/" class="nav-link">Home</a>
+<a href="/add_product/product/" class="nav-link">Add Product</a>
+<a href="/add_product/up_view/" class="nav-link">Update Product</a>
+<a href="/payment/v_pay/" class="nav-link">Orders</a>
+<a href="/feedback_and_rating/far_vi/" class="nav-link">Feedbacks</a>
+{%endblock %}
+
+{%block header_right %}
+<!-- Profile Icon on Right Side -->
+<a href="/register_for_seller/v_seller/" style="color: #2c3e50; font-size: 20px; transition: color 0.3s;"
+    title="Profile">
+    <i class="fas fa-user-circle"></i>
+</a>
+{%endblock %}
+
+{%block content %}
+<div class="container" style="padding: 40px 20px; min-height: 80vh;">
+
+    <div class="section-title" style="margin-bottom: 40px; text-align: center;">
+        <span>Customer Orders</span>
+    </div>
+
+    {%if vp %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px;">
+        {%for i in vp %}
+        <div class="product-card-std animate-stagger"
+            style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+
+            <!-- Order Header -->
+            <div
+                style="padding: 15px 20px; background: #f8f9fa; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 13px; font-weight: 600; color: #666;">ORDER #{{i.pay_id}}</span>
+                <span
+                    style="font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600;
+                    background: {%if i.status == 'Pending' %}#fff4e6{%elif i.status == 'Delivered' %}#ebfbee{%else %}#e7f5ff{%endif %};
+                    color: {%if i.status == 'Pending' %}#fd7e14{%elif i.status == 'Delivered' %}#2b8a3e{%else %}#1971c2{%endif %};">
+                    {{i.status}}
+                </span>
+            </div>
+
+            <!-- Content Area -->
+            <div style="padding: 20px; display: flex; gap: 15px; flex-grow: 1;">
+                <!-- Product Image -->
+                <div
+                    style="width: 80px; height: 80px; border-radius: var(--radius); overflow: hidden; border: 1px solid #eee; flex-shrink: 0; background: #f9f9f9; display: flex; align-items: center; justify-content: center;">
+                    {%if i.order.pro.image_of_product %}
+                    <img src="/static/{{i.order.pro.image_of_product}}" alt="Product"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                    {%else %}
+                    <i class="fas fa-image" style="color: #ccc;"></i>
+                    {%endif %}
+                </div>
+
+                <!-- Text Info -->
+                <div style="flex-grow: 1;">
+                    <h4 style="font-size: 16px; font-weight: 700; color: var(--text-color); margin-bottom: 5px;">
+                        {{i.order.pro.product_name}}</h4>
+                    <p style="font-size: 13px; color: var(--text-light); margin-bottom: 8px;">Buyer:
+                        <strong>{{i.reg.name}}</strong>
+                    </p>
+                    <div style="font-size: 18px; font-weight: 800; color: var(--text-color);">
+                        ₹{{i.order.pro.product_price}}</div>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div style="padding: 15px 20px; border-top: 1px solid #f0f0f0; background: white;">
+                <a href="/status/ds/{{i.pay_id}}" class="btn"
+                    style="width: 100%; background: var(--secondary-color); color: var(--text-color); border: 1px solid #e0e0e0; padding: 10px; font-size: 14px;">
+                    <i class="fas fa-shipping-fast" style="margin-right: 8px;"></i> Update Status
+                </a>
+            </div>
+        </div>
+        {%endfor %}
+    </div>
+    {%else %}
+    <!-- Empty State -->
+    <div
+        style="text-align: center; padding: 80px 20px; background: white; border-radius: var(--radius); box-shadow: var(--shadow-sm); margin: 40px auto; max-width: 600px;">
+        <div style="font-size: 64px; color: #eee; margin-bottom: 20px;">
+            <i class="fas fa-clipboard-list"></i>
+        </div>
+        <h2 style="color: var(--text-color); margin-bottom: 10px;">No Orders Yet</h2>
+        <p style="color: var(--text-light); margin-bottom: 30px;">Orders from your customers will appear here.</p>
+    </div>
+    {%endif %}
+
+    <div style="text-align: center; margin-top: 50px;">
+        <a href="/temp/seller/"
+            style="color: var(--text-light); text-decoration: none; font-size: 14px; font-weight: 500;">
+            &larr; Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{%endblock %}

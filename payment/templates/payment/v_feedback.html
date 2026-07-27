@@ -1,0 +1,94 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}Order History | Homezo{%endblock %}
+
+{%block nav_items %}
+<a href="/temp/buyer/" class="nav-link">Home</a>
+<a href="/add_product/v_product/" class="nav-link">Product</a>
+<a href="/status/vds/" class="nav-link">Order Status</a>
+<a href="/payment/v_feed/" class="nav-link">Order History</a>
+<a href="/compalint_and_replay/add/" class="nav-link">Complaint</a>
+{%endblock %}
+
+{%block header_right %}
+<!-- Right Side Icons -->
+<div style="display: flex; align-items: center; gap: 20px;">
+    <a href="/cart/v_cart/" style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;"
+        title="Cart">
+        <i class="fas fa-shopping-cart"></i>
+    </a>
+    <a href="/register_for_buyer/vu/"
+        style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;" title="Update Profile">
+        <i class="fas fa-user-circle"></i>
+    </a>
+    <a href="/compalint_and_replay/viewreply/"
+        style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;" title="Messages">
+        <i class="fas fa-comment-dots"></i>
+    </a>
+</div>
+{%endblock %}
+
+{%block content %}
+<div class="container" style="padding: 60px 20px; min-height: 80vh;">
+
+    <div class="section-title" style="margin-bottom: 40px; text-align: center;">
+        <span>Order History</span>
+    </div>
+
+    <div style="text-align: center; max-width: 600px; margin: 0 auto 50px;">
+        <p style="color: var(--text-light); font-size: 16px;">Review your past purchases and store your culinary
+            memories.</p>
+    </div>
+
+    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 25px;">
+        {%for i in vf %}
+        <div class="product-card-std animate-stagger"
+            style="padding: 25px; display: flex; flex-direction: row; gap: 25px; align-items: center; border: 1px solid #f0f0f0;">
+
+            <div
+                style="width: 100px; height: 100px; border-radius: var(--radius); overflow: hidden; border: 1px solid #eee; flex-shrink: 0; background: #fafafa; display: flex; align-items: center; justify-content: center;">
+                {%if i.pro.image_of_product %}
+                <img src="/static/{{i.pro.image_of_product}}" alt="{{i.pro.product_name}}"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+                {%else %}
+                <i class="fas fa-box fa-2x" style="color: #cbd5e1;"></i>
+                {%endif %}
+            </div>
+
+            <div style="flex-grow: 1;">
+                <span
+                    style="font-size: 12px; font-weight: 700; color: var(--text-light); margin-bottom: 4px; display: block;">ORDER
+                    #{{i.order_id}}</span>
+                <h3 style="font-size: 20px; font-weight: 800; color: var(--text-color); margin-bottom: 10px;">
+                    {{i.pro.product_name}}</h3>
+                <div style="display: flex; gap: 20px; font-size: 14px; font-weight: 600; color: #64748b;">
+                    <span><i class="fas fa-tag"></i> {{i.pro.cat.catagory}}</span>
+                    <span><i class="fas fa-wallet"></i> ₹{{i.amount}}</span>
+                </div>
+            </div>
+
+            <a href="/feedback_and_rating/far/{{i.order_id}}" class="btn btn-primary" style="padding: 12px 24px;">
+                <i class="fas fa-star" style="margin-right: 8px;"></i> Feedback
+            </a>
+        </div>
+        {%empty %}
+        <div
+            style="text-align: center; padding: 80px 40px; background: white; border-radius: 24px; box-shadow: var(--shadow-sm); border: 1px solid #eee;">
+            <i class="fas fa-history" style="font-size: 64px; color: #e2e8f0; margin-bottom: 25px;"></i>
+            <h2 style="color: var(--text-color); margin-bottom: 10px;">No History Yet</h2>
+            <p style="color: var(--text-light); margin-bottom: 30px;">Your shopping history is waiting for its first
+                entry. Start your journey today!</p>
+            <a href="/add_product/v_product/" class="btn btn-primary">Start Shopping</a>
+        </div>
+        {%endfor %}
+    </div>
+
+    <div style="text-align: center; margin-top: 50px;">
+        <a href="/temp/buyer/"
+            style="color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{%endblock %}

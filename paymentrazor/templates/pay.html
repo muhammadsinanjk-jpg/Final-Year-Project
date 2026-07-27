@@ -1,0 +1,243 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}Checkout | Homezo{%endblock %}
+
+{%block nav_items %}
+<a href="/temp/buyer/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Home</a>
+<a href="/add_product/v_product/"
+    style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Product</a>
+<a href="/status/vds/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Order
+    Status</a>
+<a href="/payment/v_feed/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Order
+    History</a>
+<a href="/compalint_and_replay/add/"
+    style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Complaint</a>
+{%endblock %}
+
+{%block header_right %}
+<!-- Cart Icon -->
+<a href="/cart/v_cart/"
+    style="color: #2c3e50; font-size: 20px; transition: color 0.3s; margin-right: 15px; text-decoration: none;"
+    title="Cart">
+    <i class="fas fa-shopping-cart"></i>
+</a>
+
+<!-- Profile Icon on Right Side -->
+<a href="/register_for_buyer/vu/"
+    style="color: #2c3e50; font-size: 20px; transition: color 0.3s; margin-right: 15px; text-decoration: none;"
+    title="Update Profile">
+    <i class="fas fa-user-circle"></i>
+</a>
+
+<!-- Reply Icon -->
+<a href="/compalint_and_replay/viewreply/"
+    style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;" title="Reply">
+    <i class="fas fa-comment-dots"></i>
+</a>
+{%endblock %}
+
+{%block content %}
+<style>
+    .payment-page-wrapper {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        background: #f8fafc;
+    }
+
+    .payment-card {
+        background: white;
+        width: 100%;
+        max-width: 480px;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        border: 1px solid #f1f5f9;
+    }
+
+    .payment-card h1 {
+        font-size: 28px;
+        font-weight: 800;
+        color: #004d40;
+        margin-bottom: 25px;
+        letter-spacing: -0.5px;
+    }
+
+    .order-details-box {
+        background: #f1f5f9;
+        padding: 20px;
+        border-radius: 16px;
+        margin-bottom: 30px;
+        text-align: left;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 15px;
+    }
+
+    .detail-label {
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .detail-value {
+        color: #1e293b;
+        font-weight: 700;
+    }
+
+    .payment-total {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .total-label {
+        font-size: 18px;
+        font-weight: 800;
+        color: #1e293b;
+    }
+
+    .total-value {
+        font-size: 24px;
+        font-weight: 900;
+        color: #004d40;
+    }
+
+    .btn-pay {
+        width: 100%;
+        background: #004d40;
+        color: white;
+        padding: 18px;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 12px rgba(0, 77, 64, 0.15);
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-pay:hover {
+        background: #002f34;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 77, 64, 0.25);
+    }
+
+    .secure-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #94a3b8;
+        font-weight: 600;
+        margin-top: 20px;
+    }
+
+    .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        margin-top: 25px;
+        transition: color 0.2s;
+    }
+
+    .back-home:hover {
+        color: #004d40;
+    }
+</style>
+
+<div class="payment-page-wrapper">
+    <div class="payment-card">
+        <h1>Payment Secure</h1>
+
+        <div class="order-details-box">
+            <div class="detail-row">
+                <span class="detail-label">Order ID</span>
+                <span class="detail-value">#{{order.order_id}}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Product</span>
+                <span class="detail-value" style="text-align: right;">{{order.pro.product_name}}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Address</span>
+                <span class="detail-value" style="text-align: right; max-width: 200px;">{{order.delivery_address}}</span>
+            </div>
+
+            <div class="payment-total">
+                <span class="total-label">Total Amount</span>
+                <span class="total-value">&#8377;{{order.amount}}</span>
+            </div>
+        </div>
+
+        <button id="payBtn" class="btn-pay">
+            <i class="fas fa-lock"></i> Pay Now
+        </button>
+
+        <div class="secure-badge">
+            <i class="fab fa-razorpay" style="font-size: 20px;"></i>
+            <span>SECURE CHECKOUT BY RAZORPAY</span>
+        </div>
+
+        <a href="/temp/buyer/" class="back-home">
+            <i class="fas fa-arrow-left"></i> Return to Store
+        </a>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var razorpay_key = "{{razorpay_key}}";
+    var amt = "{{amt}}";
+
+    $('#payBtn').click(function () {
+        var options = {
+            key: razorpay_key,
+            amount: amt,
+            currency: 'INR',
+            name: 'HOMEZO',
+            description: 'Order #{{order.order_id}} Payment',
+            theme: {
+                color: "#004d40"
+            },
+            handler: function (response) {
+                $.ajax({
+                    url: '/paymentrazor/post_pay/',
+                    method: 'POST',
+                    data: {
+                        'fxid': response.razorpay_payment_id,
+                        'csrfmiddlewaretoken': '{{csrf_token}}'
+                    },
+                    success: function (data) {
+                        alert('Payment successful!');
+                        window.location.href = '/temp/buyer/';
+                    }
+                });
+            }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+    });
+</script>
+{%endblock %}

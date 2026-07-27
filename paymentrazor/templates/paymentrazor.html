@@ -1,0 +1,130 @@
+<!-- payment/templates/payment/payment_form.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Payment Form</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #fff3b0, #ffe066);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 420px;
+            margin: 100px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.15);
+            text-align: center;
+            border-top: 6px solid #ffc107;
+        }
+
+        h1 {
+            color: #ff9800;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="submit"] {
+            background-color: #ff9800;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #ffc107;
+        }
+
+        .home-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 20px;
+            background-color: #ff9800;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .home-btn:hover {
+            background-color: #ffc107;
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Razorpay Payment</h1>
+
+        <form id="paymentForm">
+            <input type="hidden" name="amount" value="{{amt}}">
+            <input type="hidden" name="currency" value="INR">
+            <input type="submit" value="Pay Amount">
+        </form>
+
+        <a href="/temp/buyer/" class="home-btn">Home</a>
+
+        <div class="footer-text">
+            Secure Payment powered by Razorpay
+        </div>
+    </div>
+
+    <script>
+        var razorpay_key = "{{razorpay_key}}";
+
+        $(document).ready(function () {
+            $('#paymentForm').submit(function (e) {
+                e.preventDefault();
+
+                var options = {
+                    key: razorpay_key,
+                    amount: $('#paymentForm input[name="amount"]').val(),
+                    currency: $('#paymentForm input[name="currency"]').val(),
+                    name: 'HOMEZO',
+                    description: 'Payment for your product/service',
+                    image: 'your_logo_url.png',
+                    handler: function (response) {
+                        $.ajax({
+                            url:'/paymentrazor/post_pay/',
+                            data:{
+                                'fxid':"aa",
+                            },
+                            success:function (data) {
+                                // Optional: handle server response
+                            }
+                        })
+                        alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
+                    },
+                };
+
+                var rzp = new Razorpay(options);
+                rzp.open();
+            });
+        });
+    </script>
+
+</body>
+</html>
