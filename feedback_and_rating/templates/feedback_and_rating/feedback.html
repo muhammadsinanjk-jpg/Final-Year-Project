@@ -1,0 +1,97 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}Verify & Rate | HOMEZO{%endblock %}
+
+{%block content %}
+<style>
+    /* Star Rating CSS */
+    .rating-container {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        gap: 5px;
+    }
+
+    .rating-container input {
+        display: none;
+    }
+
+    .rating-container label {
+        font-size: 30px;
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .rating-container input:checked~label,
+    .rating-container label:hover,
+    .rating-container label:hover~label {
+        color: var(--yellow);
+    }
+</style>
+
+<div class="container" style="padding: 60px 20px; min-height: 80vh;">
+    <div class="form-container" style="max-width: 500px; margin: 0 auto; border-top: 4px solid var(--accent-color);">
+        <div class="section-title" style="margin-bottom: 30px; text-align: center;">
+            <span style="color: var(--text-color);">Rate Your Experience</span>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {%csrf_token %}
+
+            <!-- Photo Upload -->
+            <div
+                style="margin-bottom: 20px; padding: 20px; background: #fafafa; border-radius: var(--radius); text-align: center; border: 1px dashed #ddd;">
+                <label
+                    style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color); font-size: 14px;">Upload
+                    Photo (Optional)</label>
+                <input type="file" name="photo" style="font-size: 13px;">
+            </div>
+
+            <!-- Feedback -->
+            <div style="margin-bottom: 20px;">
+                <label
+                    style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color); font-size: 14px;">Your
+                    Feedback</label>
+                <textarea name="feed" class="form-control" rows="4" placeholder="Tell us what you think..."
+                    style="resize: none;" required></textarea>
+            </div>
+
+            <!-- Rating -->
+            <div style="margin-bottom: 30px; text-align: center;">
+                <label
+                    style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-color); font-size: 14px;">Overall
+                    Rating</label>
+                <div class="rating-container" style="justify-content: center;">
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5" title="Excellent"><i class="fas fa-star"></i></label>
+
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4" title="Good"><i class="fas fa-star"></i></label>
+
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3" title="Average"><i class="fas fa-star"></i></label>
+
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2" title="Poor"><i class="fas fa-star"></i></label>
+
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1" title="Terrible"><i class="fas fa-star"></i></label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 16px;">
+                Submit Feedback
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
+            <a href="/temp/buyer/"
+                style="color: var(--text-light); text-decoration: none; font-size: 14px; font-weight: 500;">
+                &larr; Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+{%endblock %}

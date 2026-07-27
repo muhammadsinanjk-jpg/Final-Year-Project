@@ -1,0 +1,75 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}Submit Complaint | Homezo{%endblock %}
+
+{%block nav_items %}
+<a href="/temp/buyer/" class="nav-link">Home</a>
+<a href="/add_product/v_product/" class="nav-link">Product</a>
+<a href="/status/vds/" class="nav-link">Order Status</a>
+<a href="/payment/v_feed/" class="nav-link">Order History</a>
+<a href="/compalint_and_replay/add/" class="nav-link">Complaint</a>
+{%endblock %}
+
+{%block header_right %}
+<!-- Cart Icon -->
+<a href="/cart/v_cart/" style="color: #2c3e50; font-size: 20px; transition: color 0.3s; margin-right: 15px;"
+    title="Cart">
+    <i class="fas fa-shopping-cart"></i>
+</a>
+
+<!-- Profile Icon on Right Side -->
+<a href="/register_for_buyer/vu/" style="color: #2c3e50; font-size: 20px; transition: color 0.3s; margin-right: 15px;"
+    title="Update Profile">
+    <i class="fas fa-user-circle"></i>
+</a>
+
+<!-- Reply Icon -->
+<a href="/compalint_and_replay/viewreply/" style="color: #2c3e50; font-size: 20px; transition: color 0.3s;"
+    title="Reply">
+    <i class="fas fa-comment-dots"></i>
+</a>
+{%endblock %}
+
+{%block content %}
+<div class="container" style="padding: 60px 20px; min-height: 80vh;">
+    <div class="form-container" style="max-width: 600px; margin: 0 auto; border-top: 4px solid var(--danger);">
+        <div class="section-title" style="margin-bottom: 30px; text-align: center;">
+            <span>Submit a Complaint</span>
+        </div>
+
+        <p style="text-align: center; color: var(--text-light); margin-bottom: 30px; line-height: 1.6;">
+            We're sorry you faced an issue. Please describe your problem below, and our support team will resolve it as
+            soon as possible.
+        </p>
+
+        <form method="post">
+            {%csrf_token %}
+            <div style="margin-bottom: 25px;">
+                <label
+                    style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-color);">Complaint
+                    Details</label>
+                <textarea name="com" rows="6" class="form-control" style="resize: vertical;"
+                    placeholder="Please describe your issue in detail..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; padding: 12px; font-size: 16px; background: var(--danger);">
+                Submit Complaint
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+            <a href="/compalint_and_replay/viewreply/"
+                style="color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 14px;">
+                <i class="fas fa-list"></i> View Previous Complaints
+            </a>
+            <br><br>
+            <a href="/temp/buyer/"
+                style="color: var(--text-light); font-size: 14px; text-decoration: none; font-weight: 500;">
+                &larr; Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{%endblock %}

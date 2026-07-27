@@ -1,0 +1,104 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}Product Feedback | HOMEZO{%endblock %}
+
+{%block nav_items %}
+<a href="/temp/seller/" style="font-weight: 500; font-size: 16px; color: #212121;">Home</a>
+<a href="/add_product/product/" style="font-weight: 500; font-size: 16px; color: #212121;">Add Product</a>
+<a href="/add_product/up_view/" style="font-weight: 500; font-size: 16px; color: #212121;">Update Product</a>
+<a href="/payment/v_pay/" style="font-weight: 500; font-size: 16px; color: #212121;">Orders</a>
+<a href="/feedback_and_rating/far_vi/" style="font-weight: 500; font-size: 16px; color: #212121;">Feedbacks</a>
+{%endblock %}
+
+{%block header_right %}
+<!-- Profile Icon on Right Side -->
+<a href="/register_for_seller/v_seller/" style="color: #2c3e50; font-size: 20px; transition: color 0.3s;"
+    title="Profile">
+    <i class="fas fa-user-circle"></i>
+</a>
+{%endblock %}
+
+{%block content %}
+<div class="container" style="padding: 40px 20px; min-height: 80vh;">
+
+    <div class="section-title" style="margin-bottom: 40px; text-align: center;">
+        <span>Customer Feedbacks</span>
+    </div>
+
+    {%if a %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px;">
+        {%for i in a %}
+        <div class="product-card-std animate-stagger" style="padding: 25px; display: flex; flex-direction: column;">
+
+            <!-- Buyer Info -->
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <div
+                    style="width: 45px; height: 45px; border-radius: 50%; background: var(--secondary-color); display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: 700; border: 1px solid #eee;">
+                    {{i.reg.name|slice:":1"|upper}}
+                </div>
+                <div>
+                    <h4 style="font-size: 16px; font-weight: 700; color: var(--text-color); margin: 0;">{{i.reg.name}}
+                    </h4>
+                    <span style="font-size: 12px; color: var(--text-light);">Verified Customer</span>
+                </div>
+            </div>
+
+            <!-- Product Context -->
+            <div
+                style="background: #fcfcfc; border-radius: var(--radius); padding: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border: 1px solid #f0f0f0;">
+                <img src="/static/{{i.order.pro.image_of_product}}" alt="Product"
+                    style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                <span
+                    style="font-size: 14px; font-weight: 600; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">{{i.order.pro.product_name}}</span>
+            </div>
+
+            <!-- Rating Stars -->
+            <div style="margin-bottom: 12px; color: var(--yellow);">
+                {%for _ in "12345" %}
+                {%if forloop.counter <= i.rating|add:0 %} <i class="fas fa-star"></i>
+                    {%else %}
+                    <i class="far fa-star"></i>
+                    {%endif %}
+                    {%endfor %}
+                    <span
+                        style="color: var(--text-light); font-size: 14px; margin-left: 5px; font-weight: 600;">{{i.rating}}/5</span>
+            </div>
+
+            <!-- Feedback Content -->
+            <div style="flex-grow: 1;">
+                <p style="font-size: 14px; line-height: 1.6; color: #555; font-style: italic;">
+                    "{{i.feed_back}}"
+                </p>
+            </div>
+
+            <!-- Date (Optional/Placeholder) -->
+            <div style="margin-top: 20px; text-align: right;">
+                <span style="font-size: 11px; color: #aaa; text-transform: uppercase; font-weight: 700;">Customer
+                    Review</span>
+            </div>
+        </div>
+        {%endfor %}
+    </div>
+    {%else %}
+    <!-- Empty State -->
+    <div
+        style="text-align: center; padding: 80px 20px; background: white; border-radius: var(--radius); box-shadow: var(--shadow-sm); margin: 40px auto; max-width: 600px;">
+        <div style="font-size: 64px; color: #eee; margin-bottom: 20px;">
+            <i class="fas fa-comments"></i>
+        </div>
+        <h2 style="color: var(--text-color); margin-bottom: 10px;">No Feedbacks Yet</h2>
+        <p style="color: var(--text-light); margin-bottom: 30px;">Customer reviews will appear here once they've
+            received their orders.</p>
+    </div>
+    {%endif %}
+
+    <div style="text-align: center; margin-top: 50px;">
+        <a href="/temp/seller/"
+            style="color: var(--text-light); text-decoration: none; font-size: 14px; font-weight: 500;">
+            &larr; Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{%endblock %}
