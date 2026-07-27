@@ -1,0 +1,253 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}Checkout Summary | Homezo{%endblock %}
+
+{%block nav_items %}
+<a href="/temp/buyer/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Home</a>
+<a href="/add_product/v_product/"
+    style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Product</a>
+<a href="/status/vds/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Order
+    Status</a>
+<a href="/payment/v_feed/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Order
+    History</a>
+<a href="/compalint_and_replay/add/"
+    style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Complaint</a>
+{%endblock %}
+
+{%block header_right %}
+<!-- Right Side Icons -->
+<div style="display: flex; align-items: center; gap: 20px;">
+    <a href="/cart/v_cart/" style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;"
+        title="Cart">
+        <i class="fas fa-shopping-cart"></i>
+    </a>
+    <a href="/register_for_buyer/vu/"
+        style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;" title="Update Profile">
+        <i class="fas fa-user-circle"></i>
+    </a>
+    <a href="/compalint_and_replay/viewreply/"
+        style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;" title="Messages">
+        <i class="fas fa-comment-dots"></i>
+    </a>
+</div>
+{%endblock %}
+
+{%block content %}
+<style>
+    .order-summary-wrapper {
+        min-height: 85vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 50px 20px;
+        background: #f8fafc;
+    }
+
+    .order-summary-card {
+        background: white;
+        width: 100%;
+        max-width: 600px;
+        padding: 40px;
+        border-radius: 24px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid #f1f5f9;
+        text-align: center;
+    }
+
+    .order-summary-card h1 {
+        font-size: 30px;
+        font-weight: 800;
+        color: #004d40;
+        margin-bottom: 30px;
+    }
+
+    .items-container {
+        background: #f8fafc;
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 30px;
+        text-align: left;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .summary-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-info h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    .item-info span {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .item-price {
+        font-size: 16px;
+        font-weight: 800;
+        color: #004d40;
+    }
+
+    .grand-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+        padding-top: 20px;
+        border-top: 2px solid #e2e8f0;
+    }
+
+    .total-label {
+        font-size: 20px;
+        font-weight: 800;
+        color: #1e293b;
+    }
+
+    .total-val {
+        font-size: 26px;
+        font-weight: 900;
+        color: #004d40;
+    }
+
+    .delivery-form {
+        text-align: left;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 10px;
+        padding-left: 5px;
+    }
+
+    .address-field {
+        width: 100%;
+        padding: 16px;
+        border-radius: 14px;
+        border: 2px solid #f1f5f9;
+        background: #f8fafc;
+        font-size: 15px;
+        color: #1e293b;
+        transition: all 0.2s;
+        margin-bottom: 25px;
+    }
+
+    .address-field:focus {
+        border-color: #004d40;
+        background: white;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(0, 77, 64, 0.05);
+    }
+
+    .btn-proceed {
+        width: 100%;
+        background: #004d40;
+        color: white;
+        padding: 18px;
+        border: none;
+        border-radius: 14px;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 12px rgba(0, 77, 64, 0.15);
+    }
+
+    .btn-proceed:hover {
+        background: #002f34;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 77, 64, 0.25);
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        margin-top: 30px;
+        transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+        color: #004d40;
+    }
+</style>
+
+<div class="order-summary-wrapper">
+    <div class="order-summary-card">
+        <h1>Order Summary</h1>
+
+        {%if messages %}
+        {%for message in messages %}
+        <div
+            style="background: #fef2f2; color: #b91c1c; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; font-weight: 600; border: 1px solid #fee2e2;">
+            <i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i> {{message}}
+        </div>
+        {%endfor %}
+        {%endif %}
+
+        <div class="items-container">
+            {%for item in p %}
+            <div class="summary-item">
+                <div class="item-info">
+                    <h4>{{item.pro.product_name}}</h4>
+                    <div class="quantity-control"
+                        style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                        <span style="font-size: 13px; color: #64748b; font-weight: 600;">Quantity:</span>
+                        <a href="{% url 'update_quantity' item.order_id 'minus' %}"
+                            style="background: #e2e8f0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; color: #1e293b; font-weight: bold;">-</a>
+                        <span style="font-weight: 700; color: #1e293b;">{{item.quantity}}</span>
+                        <a href="{% url 'update_quantity' item.order_id 'plus' %}"
+                            style="background: #e2e8f0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; color: #1e293b; font-weight: bold;">+</a>
+                    </div>
+                </div>
+                <div class="item-price">₹{{item.amount}}</div>
+            </div>
+            {%endfor %}
+
+            <div class="grand-total-row">
+                <span class="total-label">Grand Total</span>
+                <span class="total-val">₹{{grand_total|default:"0"}}</span>
+            </div>
+        </div>
+
+        <form method="post" class="delivery-form">
+            {%csrf_token %}
+            <label class="form-label">Delivery Address</label>
+            <textarea name="delivery_address" class="address-field"
+                placeholder="Enter full delivery address (House No, Street, Landmark, Pincode)" required
+                rows="3"></textarea>
+
+            <button type="submit" class="btn-proceed">
+                <i class="fas fa-credit-card"></i> Proceed to Payment
+            </button>
+        </form>
+
+        <a href="/cart/v_cart/" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Cart
+        </a>
+    </div>
+</div>
+{%endblock %}

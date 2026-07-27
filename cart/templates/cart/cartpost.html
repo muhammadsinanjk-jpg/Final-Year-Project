@@ -1,0 +1,458 @@
+{%extends 'base.html' %}
+{%load static %}
+
+{%block title %}My Cart | Homezo{%endblock %}
+
+{%block nav_items %}
+<a href="/temp/buyer/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Home</a>
+<a href="/add_product/v_product/"
+    style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Product</a>
+<a href="/status/vds/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Order
+    Status</a>
+<a href="/payment/v_feed/" style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Order
+    History</a>
+<a href="/compalint_and_replay/add/"
+    style="font-weight: 500; font-size: 16px; color: #212121; text-decoration: none;">Complaint</a>
+{%endblock %}
+
+{%block header_right %}
+<!-- Right Side Icons -->
+<div style="display: flex; align-items: center; gap: 20px;">
+    <!-- Cart Icon (Active) -->
+    <a href="/cart/v_cart/" style="color: #004d40; font-size: 20px; transition: color 0.3s; text-decoration: none;"
+        title="Cart">
+        <i class="fas fa-shopping-cart"></i>
+    </a>
+
+    <!-- Profile Icon -->
+    <a href="/register_for_buyer/vu/"
+        style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;" title="Update Profile">
+        <i class="fas fa-user-circle"></i>
+    </a>
+
+    <!-- Reply Icon -->
+    <a href="/compalint_and_replay/viewreply/"
+        style="color: #2c3e50; font-size: 20px; transition: color 0.3s; text-decoration: none;" title="Messages">
+        <i class="fas fa-comment-dots"></i>
+    </a>
+</div>
+{%endblock %}
+
+{%block content %}
+<style>
+    .cart-page-wrapper {
+        min-height: 85vh;
+        padding: 60px 20px;
+        background: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cart-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .cart-header h1 {
+        font-size: 36px;
+        font-weight: 800;
+        color: #004d40;
+        margin-bottom: 10px;
+    }
+
+    .cart-container {
+        display: flex;
+        gap: 30px;
+        width: 100%;
+        max-width: 1100px;
+        flex-wrap: wrap;
+    }
+
+    /* Cart Items Section */
+    .cart-items-column {
+        flex: 2;
+        min-width: 350px;
+    }
+
+    .cart-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+        border: 1px solid #f1f5f9;
+        display: flex;
+        gap: 25px;
+        align-items: center;
+        margin-bottom: 20px;
+        transition: transform 0.2s;
+        position: relative;
+    }
+
+    .cart-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(0, 77, 64, 0.06);
+    }
+
+    .prod-img-box {
+        width: 110px;
+        height: 110px;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #f1f5f9;
+        background: #f8fafc;
+        flex-shrink: 0;
+    }
+
+    .prod-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .prod-info {
+        flex-grow: 1;
+    }
+
+    .prod-name {
+        font-size: 18px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 6px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .prod-seller {
+        font-size: 13px;
+        color: #94a3b8;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .qty-price-row {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .qty-control {
+        display: flex;
+        align-items: center;
+        background: #f1f5f9;
+        border-radius: 10px;
+        padding: 4px;
+    }
+
+    .btn-qty {
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: white;
+        color: #004d40;
+        border-radius: 8px;
+        font-weight: 800;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s;
+    }
+
+    .btn-qty:hover {
+        background: #004d40;
+        color: white;
+    }
+
+    .qty-input {
+        width: 45px;
+        border: none;
+        background: transparent;
+        text-align: center;
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 15px;
+    }
+
+    .item-total-price {
+        font-size: 20px;
+        font-weight: 900;
+        color: #004d40;
+    }
+
+    .btn-remove {
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        color: #ef4444;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+
+    .btn-remove:hover {
+        opacity: 1;
+    }
+
+    .btn-buy-now {
+        background: #004d40;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 13px;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-buy-now:hover {
+        background: #002f34;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 77, 64, 0.15);
+    }
+
+    /* Summary Column */
+    .summary-column {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .summary-card {
+        background: white;
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        border: 1px solid #f1f5f9;
+        position: sticky;
+        top: 100px;
+    }
+
+    .summary-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: #004d40;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 15px;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 15px;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .price-row.grand-total {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #f1f5f9;
+        color: #1e293b;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .total-val {
+        color: #004d40;
+        font-weight: 900;
+    }
+
+    .btn-checkout {
+        width: 100%;
+        background: #004d40;
+        color: white;
+        padding: 18px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 20px;
+        box-shadow: 0 4px 12px rgba(0, 77, 64, 0.15);
+    }
+
+    .btn-checkout:hover {
+        background: #002f34;
+        transform: translateY(-2px);
+    }
+
+    .empty-cart {
+        text-align: center;
+        padding: 80px 40px;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        max-width: 600px;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        margin-top: 40px;
+    }
+</style>
+
+<div class="cart-page-wrapper">
+    <div class="cart-header">
+        <h1>Your Shopping Cart</h1>
+        <p>You have {{ca|length}} item{{ca|length|pluralize}} in your cart</p>
+    </div>
+
+    {%if ca %}
+    <div class="cart-container">
+        <!-- Items Column -->
+        <div class="cart-items-column">
+            {%for i in ca %}
+            <div class="cart-card" data-price="{{i.pro.product_price}}" data-stock="{{i.pro.stock_quantity}}"
+                data-cartid="{{i.cart_id}}">
+
+                <a href="{%url 'delete_cart' i.cart_id %}" class="btn-remove">Remove</a>
+
+                <div class="prod-img-box">
+                    {%if i.pro.image_of_product %}
+                    <img src="/static/{{i.pro.image_of_product}}" alt="{{i.pro.product_name}}">
+                    {%else %}
+                    <div
+                        style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: #cbd5e1;">
+                        <i class="fas fa-image fa-2x"></i>
+                    </div>
+                    {%endif %}
+                </div>
+
+                <div class="prod-info">
+                    <a href="#" class="prod-name">{{i.pro.product_name}}</a>
+                    <div class="prod-seller">Seller: Homezo Verified</div>
+
+                    <div class="qty-price-row">
+                        <div class="qty-control">
+                            <button type="button" class="btn-qty" onclick="changeQty(this,-1)">-</button>
+                            <input type="text" class="qty-input" value="1" readonly>
+                            <button type="button" class="btn-qty" onclick="changeQty(this,1)">+</button>
+                        </div>
+                        <div class="item-total-price">&#8377; <span class="price-val">{{i.pro.product_price}}</span>
+                        </div>
+                        <a href="{%url 'buy_now' i.pro.pro_id %}" class="btn-buy-now">
+                            <i class="fas fa-bolt"></i> Buy Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {%endfor %}
+        </div>
+
+        <!-- Summary Column -->
+        <div class="summary-column">
+            <div class="summary-card">
+                <h3 class="summary-title">Order Summary</h3>
+
+                <div class="price-row">
+                    <span>Subtotal</span>
+                    <span>&#8377;<span id="cartTotalDisplay">{{cart_total}}</span></span>
+                </div>
+
+                <div class="price-row">
+                    <span>Tax (GST)</span>
+                    <span style="color: #22c55e;">Calculated at checkout</span>
+                </div>
+
+                <div class="price-row">
+                    <span>Delivery</span>
+                    <span style="color: #22c55e;">FREE</span>
+                </div>
+
+                <div class="price-row grand-total">
+                    <span>Total Amount</span>
+                    <span class="total-val">&#8377;<span id="cartTotal">{{cart_total}}</span></span>
+                </div>
+
+                <form method="get" action="{%url 'order' %}">
+                    <input type="hidden" name="cart_data" id="cartData">
+                    <button type="submit" class="btn-checkout">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {%else %}
+    <div class="empty-cart">
+        <div style="font-size: 72px; color: #e2e8f0; margin-bottom: 25px;">
+            <i class="fas fa-shopping-basket"></i>
+        </div>
+        <h2 style="color: #1e293b; margin-bottom: 10px;">Your cart is feeling lonely</h2>
+        <p style="color: #64748b; margin-bottom: 30px;">Add something fresh and artisanal to your basket today.</p>
+        <a href="/add_product/v_product/" class="btn"
+            style="background: #004d40; color: white; padding: 14px 28px; border-radius: 12px; font-weight: 700; text-decoration: none;">Explore
+            Store</a>
+    </div>
+    {%endif %}
+
+    <a href="/temp/buyer/" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Continue Shopping
+    </a>
+</div>
+
+<script>
+    function changeQty(btn, change) {
+        const card = btn.closest('.cart-card');
+        const price = parseFloat(card.dataset.price);
+        const stock = parseInt(card.dataset.stock);
+        const qtyInput = card.querySelector('.qty-input');
+        const priceSpan = card.querySelector('.price-val');
+
+        let qty = parseInt(qtyInput.value) + change;
+        if (qty < 1) qty = 1;
+        if (qty > stock) qty = stock;
+
+        qtyInput.value = qty;
+        priceSpan.innerText = (price * qty).toFixed(0);
+
+        updateCartTotal();
+        syncCartData();
+    }
+
+    function updateCartTotal() {
+        let total = 0;
+        document.querySelectorAll('.cart-card').forEach(card => {
+            const price = parseFloat(card.dataset.price);
+            const qty = parseInt(card.querySelector('.qty-input').value);
+            total += price * qty;
+        });
+
+        if (document.getElementById('cartTotal')) document.getElementById('cartTotal').innerText = total.toFixed(0);
+        if (document.getElementById('cartTotalDisplay')) document.getElementById('cartTotalDisplay').innerText = total.toFixed(0);
+    }
+
+    function syncCartData() {
+        const cartItems = [];
+        document.querySelectorAll('.cart-card').forEach(card => {
+            cartItems.push({
+                cart_id: card.dataset.cartid,
+                quantity: parseInt(card.querySelector('.qty-input').value)
+            });
+        });
+        document.getElementById('cartData').value = JSON.stringify(cartItems);
+    }
+
+    // Initialize cart data on page load
+    if (document.querySelector('.cart-card')) {
+        syncCartData();
+    }
+</script>
+{%endblock %}
